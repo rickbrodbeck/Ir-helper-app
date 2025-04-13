@@ -25,25 +25,35 @@
 
     <pre id="resultado" style="background:#eee; padding:1em;"></pre>
 
-    <script>
-      async function uploadFile(inputId, endpoint) {
-        const input = document.getElementById(inputId);
-        const file = input.files[0];
-        if (!file) {
-          alert("Selecione um arquivo.");
-          return;
-        }
+    <s<script>
+  async function uploadFile(inputId, endpoint) {
+    const input = document.getElementById(inputId);
+    const file = input.files[0];
+    if (!file) {
+      alert("Selecione um arquivo.");
+      return;
+    }
 
-        const formData = new FormData();
-        formData.append("file", file);
+    const formData = new FormData();
+    formData.append("file", file);
 
-        const res = await fetch("https://ir-helper-backend.onrender.com" + endpoint, {
-          method: "POST",
-          body: formData,
-        });
-        const data = await res.json();
-        document.getElementById("resultado").innerText = JSON.stringify(data, null, 2);
+    try {
+      const res = await fetch("https://ir-helper-backend.onrender.com" + endpoint, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        throw new Error("Erro ao enviar: " + res.statusText);
       }
+
+      const data = await res.json();
+      document.getElementById("resultado").innerText = JSON.stringify(data, null, 2);
+    } catch (err) {
+      alert("Erro ao enviar arquivo: " + err.message);
+    }
+  }
+</script>
     </script>
   </body>
 </html>
