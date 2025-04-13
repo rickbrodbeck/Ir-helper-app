@@ -1,10 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
   <head>
-    <title>IR Helper App</title>
+    <meta charset="UTF-8" />
+    <title>IR Helper - Upload</title>
   </head>
   <body>
     <h1>IR Helper App</h1>
-    <p>Este é o painel web que será carregado via React.</p>
+    <p>Envie seus arquivos .csv para ver o cálculo de IR</p>
+
+    <h3>Enviar operações de compra e venda:</h3>
+    <input type="file" id="trades" />
+    <button onclick="uploadFile('trades', '/upload-trades')">Enviar</button>
+    <br /><br />
+
+    <h3>Enviar dividendos recebidos:</h3>
+    <input type="file" id="dividendos" />
+    <button onclick="uploadFile('dividendos', '/upload-dividendos')">Enviar</button>
+    <br /><br />
+
+    <h3>Enviar aluguéis de ações:</h3>
+    <input type="file" id="alugueis" />
+    <button onclick="uploadFile('alugueis', '/upload-alugueis')">Enviar</button>
+    <br /><br />
+
+    <pre id="resultado" style="background:#eee; padding:1em;"></pre>
+
+    <script>
+      async function uploadFile(inputId, endpoint) {
+        const input = document.getElementById(inputId);
+        const file = input.files[0];
+        if (!file) {
+          alert("Selecione um arquivo.");
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const res = await fetch("https://ir-helper-backend.onrender.com" + endpoint, {
+          method: "POST",
+          body: formData,
+        });
+        const data = await res.json();
+        document.getElementById("resultado").innerText = JSON.stringify(data, null, 2);
+      }
+    </script>
   </body>
 </html>
